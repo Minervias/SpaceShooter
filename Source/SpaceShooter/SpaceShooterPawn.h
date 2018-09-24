@@ -38,6 +38,10 @@ public:
 	UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadWrite)
 	float MoveSpeed;
 
+	/* SpeedBoost */
+	UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadWrite)
+		float SpeedBoost;
+
 	/** Sound to play each time we fire */
 	UPROPERTY(Category = Audio, EditAnywhere, BlueprintReadWrite)
 	class USoundBase* FireSound;
@@ -53,11 +57,16 @@ public:
 	/* Handler for the fire timer expiry */
 	void ShotTimerExpired();
 
+	//Speed Boost Declaration
+	void SpeedBoostAbility();
+	void SpeedBoostAbilityStop();
+
 	// Static names for axis bindings
 	static const FName MoveForwardBinding;
 	static const FName MoveRightBinding;
 	static const FName FireForwardBinding;
 	static const FName FireRightBinding;
+	static const FName SpeedBoostBinding;
 
 private:
 

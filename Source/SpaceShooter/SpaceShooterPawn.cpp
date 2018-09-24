@@ -17,6 +17,7 @@ const FName ASpaceShooterPawn::MoveForwardBinding("MoveForward");
 const FName ASpaceShooterPawn::MoveRightBinding("MoveRight");
 const FName ASpaceShooterPawn::FireForwardBinding("FireForward");
 const FName ASpaceShooterPawn::FireRightBinding("FireRight");
+const FName ASpaceShooterPawn::SpeedBoostBinding("SpeedBoost");
 
 ASpaceShooterPawn::ASpaceShooterPawn()
 {	
@@ -50,6 +51,8 @@ ASpaceShooterPawn::ASpaceShooterPawn()
 	GunOffset = FVector(90.f, 0.f, 0.f);
 	FireRate = 0.1f;
 	bCanFire = true;
+	// SpeedBoost
+	SpeedBoost = MoveSpeed + 600.0f;
 }
 
 void ASpaceShooterPawn::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
@@ -61,13 +64,32 @@ void ASpaceShooterPawn::SetupPlayerInputComponent(class UInputComponent* PlayerI
 	PlayerInputComponent->BindAxis(MoveRightBinding);
 	PlayerInputComponent->BindAxis(FireForwardBinding);
 	PlayerInputComponent->BindAxis(FireRightBinding);
+
+	// Speed Boost Bindings
+	PlayerInputComponent->BindAction("SpeedBoost", IE_Pressed, this, &ASpaceShooterPawn::SpeedBoostAbility);
+	PlayerInputComponent->BindAction("SpeedBoost", IE_Released, this, &ASpaceShooterPawn::SpeedBoostAbilityStop);
 }
+
+
+// Increase Speed of Ship with shift
+void ASpaceShooterPawn::SpeedBoostAbility()
+{
+	MoveSpeed = SpeedBoost;
+}
+
+// Return Speed of Ship to original with shift release
+void ASpaceShooterPawn::SpeedBoostAbilityStop()
+{
+	MoveSpeed = MoveSpeed - 600.0f;
+}
+
 
 void ASpaceShooterPawn::Tick(float DeltaSeconds)
 {
 	// Find movement direction
 	const float ForwardValue = GetInputAxisValue(MoveForwardBinding);
 	const float RightValue = GetInputAxisValue(MoveRightBinding);
+	//const float BoostValue = GetInputAxisValue(SpeedBoostBinding);
 
 	// Clamp max size so that (X=1, Y=1) doesn't cause faster movement in diagonal directions
 	const FVector MoveDirection = FVector(ForwardValue, RightValue, 0.f).GetClampedToMaxSize(1.0f);
@@ -75,11 +97,13 @@ void ASpaceShooterPawn::Tick(float DeltaSeconds)
 	// Calculate  movement
 	const FVector Movement = MoveDirection * MoveSpeed * DeltaSeconds;
 
+
 	// If non-zero size, move this actor
 	if (Movement.SizeSquared() > 0.0f)
 	{
 		const FRotator NewRotation = Movement.Rotation();
 		FHitResult Hit(1.f);
+
 		RootComponent->MoveComponent(Movement, NewRotation, true, &Hit);
 		
 		if (Hit.IsValidBlockingHit())
@@ -88,6 +112,8 @@ void ASpaceShooterPawn::Tick(float DeltaSeconds)
 			const FVector Deflection = FVector::VectorPlaneProject(Movement, Normal2D) * (1.f - Hit.Time);
 			RootComponent->MoveComponent(Deflection, NewRotation, true);
 		}
+
+		
 	}
 	
 	// Create fire direction vector
