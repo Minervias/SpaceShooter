@@ -117,7 +117,7 @@ void ASpaceShooterPawn::Tick(float DeltaSeconds)
 	const FVector MoveDirection = FVector(ForwardValue, RightValue, 0.f).GetClampedToMaxSize(1.0f);
 
 	// Calculate  movement
-	const FVector Movement = MoveDirection * MoveSpeed * DeltaSeconds * JumpHeight;
+	const FVector Movement = MoveDirection * MoveSpeed * DeltaSeconds;
 
 
 	// If non-zero size, move this actor
