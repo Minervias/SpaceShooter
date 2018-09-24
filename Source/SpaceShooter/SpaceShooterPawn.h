@@ -40,7 +40,11 @@ public:
 
 	/* SpeedBoost */
 	UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadWrite)
-		float SpeedBoost;
+	float SpeedBoost;
+
+	/* JumpHeight */
+	UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadWrite)
+	FVector JumpHeight;
 
 	/** Sound to play each time we fire */
 	UPROPERTY(Category = Audio, EditAnywhere, BlueprintReadWrite)
@@ -61,12 +65,17 @@ public:
 	void SpeedBoostAbility();
 	void SpeedBoostAbilityStop();
 
+	//Jump Declaration
+	void JumpAbility();
+	void JumpAbilityStop();
+
 	// Static names for axis bindings
 	static const FName MoveForwardBinding;
 	static const FName MoveRightBinding;
 	static const FName FireForwardBinding;
 	static const FName FireRightBinding;
 	static const FName SpeedBoostBinding;
+	static const FName JumpBinding;
 
 private:
 

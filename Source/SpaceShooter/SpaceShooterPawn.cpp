@@ -18,6 +18,7 @@ const FName ASpaceShooterPawn::MoveRightBinding("MoveRight");
 const FName ASpaceShooterPawn::FireForwardBinding("FireForward");
 const FName ASpaceShooterPawn::FireRightBinding("FireRight");
 const FName ASpaceShooterPawn::SpeedBoostBinding("SpeedBoost");
+const FName ASpaceShooterPawn::JumpBinding("JumpAbility");
 
 ASpaceShooterPawn::ASpaceShooterPawn()
 {	
@@ -53,6 +54,9 @@ ASpaceShooterPawn::ASpaceShooterPawn()
 	bCanFire = true;
 	// SpeedBoost
 	SpeedBoost = MoveSpeed + 600.0f;
+	// Jump
+	JumpHeight = FVector(0.0f, 0.0f, 0.0f);
+
 }
 
 void ASpaceShooterPawn::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
@@ -68,6 +72,10 @@ void ASpaceShooterPawn::SetupPlayerInputComponent(class UInputComponent* PlayerI
 	// Speed Boost Bindings
 	PlayerInputComponent->BindAction("SpeedBoost", IE_Pressed, this, &ASpaceShooterPawn::SpeedBoostAbility);
 	PlayerInputComponent->BindAction("SpeedBoost", IE_Released, this, &ASpaceShooterPawn::SpeedBoostAbilityStop);
+
+	// Jump Bindings
+	PlayerInputComponent->BindAction("JumpAbility", IE_Pressed, this, &ASpaceShooterPawn::JumpAbility);
+	PlayerInputComponent->BindAction("JumpAbility", IE_Released, this, &ASpaceShooterPawn::JumpAbilityStop);
 }
 
 
@@ -83,19 +91,30 @@ void ASpaceShooterPawn::SpeedBoostAbilityStop()
 	MoveSpeed = MoveSpeed - 600.0f;
 }
 
+// Jump Ship height of 2m
+void ASpaceShooterPawn::JumpAbility()
+{
+	JumpHeight = FVector(0.0f, 0.0f, 10.0f).GetClampedToMaxSize(1.0f);
+}
+
+// Return ship to previous height
+void ASpaceShooterPawn::JumpAbilityStop()
+{
+	JumpHeight = FVector(0.0f, 0.0f, 00.0f).GetClampedToMaxSize(1.0f);
+}
+
 
 void ASpaceShooterPawn::Tick(float DeltaSeconds)
 {
 	// Find movement direction
 	const float ForwardValue = GetInputAxisValue(MoveForwardBinding);
 	const float RightValue = GetInputAxisValue(MoveRightBinding);
-	//const float BoostValue = GetInputAxisValue(SpeedBoostBinding);
 
 	// Clamp max size so that (X=1, Y=1) doesn't cause faster movement in diagonal directions
 	const FVector MoveDirection = FVector(ForwardValue, RightValue, 0.f).GetClampedToMaxSize(1.0f);
 
 	// Calculate  movement
-	const FVector Movement = MoveDirection * MoveSpeed * DeltaSeconds;
+	const FVector Movement = MoveDirection * MoveSpeed * DeltaSeconds * JumpHeight;
 
 
 	// If non-zero size, move this actor
