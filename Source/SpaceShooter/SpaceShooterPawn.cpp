@@ -53,6 +53,7 @@ ASpaceShooterPawn::ASpaceShooterPawn()
 	bCanFire = true;
 	// SpeedBoost
 	SpeedBoost = MoveSpeed + 600.0f;
+	// Keep Track of Speed Boost Usage
 }
 
 void ASpaceShooterPawn::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
@@ -75,12 +76,16 @@ void ASpaceShooterPawn::SetupPlayerInputComponent(class UInputComponent* PlayerI
 void ASpaceShooterPawn::SpeedBoostAbility()
 {
 	MoveSpeed = SpeedBoost;
+	BoostBar++;
+
 }
 
 // Return Speed of Ship to original with shift release
 void ASpaceShooterPawn::SpeedBoostAbilityStop()
 {
 	MoveSpeed = MoveSpeed - 600.0f;
+
+
 }
 
 

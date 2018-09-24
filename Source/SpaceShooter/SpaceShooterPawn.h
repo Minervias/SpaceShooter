@@ -67,6 +67,7 @@ public:
 	static const FName FireForwardBinding;
 	static const FName FireRightBinding;
 	static const FName SpeedBoostBinding;
+	int BoostBar = 0;
 
 private:
 
