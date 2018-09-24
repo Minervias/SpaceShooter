@@ -64,8 +64,25 @@ void ASpaceShooterPawn::SetupPlayerInputComponent(class UInputComponent* PlayerI
 	PlayerInputComponent->BindAxis(MoveRightBinding);
 	PlayerInputComponent->BindAxis(FireForwardBinding);
 	PlayerInputComponent->BindAxis(FireRightBinding);
-	PlayerInputComponent->BindAxis(SpeedBoostBinding);
+
+	// Speed Boost Bindings
+	PlayerInputComponent->BindAction("SpeedBoost", IE_Pressed, this, &ASpaceShooterPawn::SpeedBoostAbility);
+	PlayerInputComponent->BindAction("SpeedBoost", IE_Released, this, &ASpaceShooterPawn::SpeedBoostAbilityStop);
 }
+
+
+// Increase Speed of Ship with shift
+void ASpaceShooterPawn::SpeedBoostAbility()
+{
+	MoveSpeed = SpeedBoost;
+}
+
+// Return Speed of Ship to original with shift release
+void ASpaceShooterPawn::SpeedBoostAbilityStop()
+{
+	MoveSpeed = MoveSpeed - 600.0f;
+}
+
 
 void ASpaceShooterPawn::Tick(float DeltaSeconds)
 {
