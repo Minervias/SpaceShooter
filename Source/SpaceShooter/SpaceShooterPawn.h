@@ -76,6 +76,7 @@ public:
 	static const FName FireRightBinding;
 	static const FName SpeedBoostBinding;
 	static const FName JumpBinding;
+	int BoostBar = 0;
 
 private:
 

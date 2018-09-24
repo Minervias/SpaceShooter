@@ -56,7 +56,6 @@ ASpaceShooterPawn::ASpaceShooterPawn()
 	SpeedBoost = MoveSpeed + 600.0f;
 	// Jump
 	JumpHeight = FVector(0.0f, 0.0f, 0.0f);
-
 }
 
 void ASpaceShooterPawn::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
@@ -83,12 +82,16 @@ void ASpaceShooterPawn::SetupPlayerInputComponent(class UInputComponent* PlayerI
 void ASpaceShooterPawn::SpeedBoostAbility()
 {
 	MoveSpeed = SpeedBoost;
+	BoostBar++;
+
 }
 
 // Return Speed of Ship to original with shift release
 void ASpaceShooterPawn::SpeedBoostAbilityStop()
 {
 	MoveSpeed = MoveSpeed - 600.0f;
+
+
 }
 
 // Jump Ship height of 2m
