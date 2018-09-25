@@ -53,9 +53,9 @@ ASpaceShooterPawn::ASpaceShooterPawn()
 	FireRate = 0.1f;
 	bCanFire = true;
 	// SpeedBoost
-	SpeedBoost = MoveSpeed + 600.0f;
-	// Jump
-	JumpHeight = FVector(0.0f, 0.0f, 0.0f);
+	SpeedBoost = MoveSpeed + 1500.0f;
+	JumpActivated = false;
+
 }
 
 void ASpaceShooterPawn::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
@@ -82,28 +82,24 @@ void ASpaceShooterPawn::SetupPlayerInputComponent(class UInputComponent* PlayerI
 void ASpaceShooterPawn::SpeedBoostAbility()
 {
 	MoveSpeed = SpeedBoost;
-	BoostBar++;
-
 }
 
 // Return Speed of Ship to original with shift release
 void ASpaceShooterPawn::SpeedBoostAbilityStop()
 {
-	MoveSpeed = MoveSpeed - 600.0f;
-
-
+	MoveSpeed = MoveSpeed - 1500.0f;
 }
 
 // Jump Ship height of 2m
 void ASpaceShooterPawn::JumpAbility()
 {
-	JumpHeight = FVector(0.0f, 0.0f, 10.0f).GetClampedToMaxSize(1.0f);
+	JumpActivated = true;
 }
 
 // Return ship to previous height
 void ASpaceShooterPawn::JumpAbilityStop()
 {
-	JumpHeight = FVector(0.0f, 0.0f, 00.0f).GetClampedToMaxSize(1.0f);
+	JumpActivated = false;
 }
 
 
@@ -116,9 +112,13 @@ void ASpaceShooterPawn::Tick(float DeltaSeconds)
 	// Clamp max size so that (X=1, Y=1) doesn't cause faster movement in diagonal directions
 	const FVector MoveDirection = FVector(ForwardValue, RightValue, 0.f).GetClampedToMaxSize(1.0f);
 
+	if (JumpActivated)
+	{
+		const FVector MoveDirection = FVector(ForwardValue, RightValue, 1000.f).GetClampedToMaxSize(1.0f);
+	}
+
 	// Calculate  movement
 	const FVector Movement = MoveDirection * MoveSpeed * DeltaSeconds;
-
 
 	// If non-zero size, move this actor
 	if (Movement.SizeSquared() > 0.0f)

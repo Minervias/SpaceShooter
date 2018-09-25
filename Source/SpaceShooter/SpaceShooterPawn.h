@@ -44,7 +44,7 @@ public:
 
 	/* JumpHeight */
 	UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadWrite)
-	FVector JumpHeight;
+	bool JumpActivated;
 
 	/** Sound to play each time we fire */
 	UPROPERTY(Category = Audio, EditAnywhere, BlueprintReadWrite)
